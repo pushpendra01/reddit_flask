@@ -49,15 +49,8 @@ def finder(redditor):
 
 def fetcher(record, sorty):
 
-    if sorty == 'top':
-        return record['most_common_word_' + sorty]
-        return record['most_common_word_top'], record['most_common_word_count_top'], record['comment_count_top']
-    elif sorty == 'new':
-        return record['most_common_word_new'], record['most_common_word_count_new'], record['comment_count_new']
-    elif sorty == 'controversial':
-        return record['most_common_word_controversial'], record['most_common_word_count_controversial'], record['comment_count_controversial']
-    elif sorty == 'hot':
-        return record['most_common_word_hot'], record['most_common_word_count_hot'], record['comment_count_hot']
+    if sorty == 'top' or 'new' or 'conterversial' or 'hot':
+        return record['most_common_word_' + sorty], record['most_common_word_count_' + sorty], record['comment_count_' + sorty]
     else:
         return False
 
