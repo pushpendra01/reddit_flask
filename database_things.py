@@ -5,7 +5,7 @@ client = pymongo.MongoClient()
 database = client.reddit
 
 
-def updatedb(redditor, most_common_word_type, most_common_word_count_type, word_type, count_type):
+def updatedb(redditor, word, count, sorty):
     collection = database['word_analysis']
     try:
         collection.update_one(
@@ -13,8 +13,8 @@ def updatedb(redditor, most_common_word_type, most_common_word_count_type, word_
             {
                 "$set":
                 {
-                    most_common_word_type: word_type,
-                    most_common_word_count_type: count_type,
+                    'most_common_word_' + sorty: word + '_' + sorty,
+                    'most_common_word_count_' + sorty: count + '_' + sorty,
                     "last_updated": datetime.utcnow()
                 }
             }
@@ -25,12 +25,12 @@ def updatedb(redditor, most_common_word_type, most_common_word_count_type, word_
         return ex
 
 
-def addtodb(redditor, most_common_word_type, most_common_word_count_type, word_type, count_type, sorty):
+def addtodb(redditor, word, count, sorty):
     collection = database['word_analysis']
     try:
         post = {'redditor': redditor,
-                most_common_word_type: word_type,
-                most_common_word_count_type: count_type,
+                'most_common_word_' + sorty: word + '_' + sorty,
+                'most_common_word_count' + sorty: count + '_' + sorty,
                 'sorty': [sorty],
                 "last_updated": datetime.utcnow()
                 }
@@ -53,23 +53,3 @@ def fetcher(record, sorty):
         return record['most_common_word_' + sorty], record['most_common_word_count_' + sorty], record['comment_count_' + sorty]
     else:
         return False
-
-# def fetcher(record, sorty, x):
-
-
-def updatedb(redditor, most_common_word_type, most_common_word_count_type, word_type, count_type, sorty):
-    collection = database['word_analysis']
-    try:
-        post = {'redditor': redditor,
-                most_common_word_type: word_type,
-                most_common_word_count_type: count_type,
-                'sorty': [sorty],
-                "last_updated": datetime.utcnow()
-                }
-
-        _ = collection.insert_one(post).inserted_id
-        return True
-    except pymongo.errors.DuplicateKeyError:
-        return False
-
-

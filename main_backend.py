@@ -21,35 +21,16 @@ def data_refetch(redditor, sorty):
 
 def addtodbcaller(redditor, word, word_count, sorty):
 
-    if sorty == 'top':
-        addtodb(redditor, 'most_common_word_top', 'most_common_word_count_top', word, word_count, sorty)
-        return True
-    elif sorty == 'new':
-        addtodb(redditor, 'most_common_word_new', 'most_common_word_count_new', word, word_count, sorty)
-        return True
-    elif sorty == 'controversial':
-        addtodb(redditor, 'most_common_word_controversial', 'most_common_word_count_controversial', word, word_count, sorty)
-        return True
-    elif sorty == 'hot':
-        addtodb(redditor, 'most_common_word_hot', 'most_common_word_count_hot', word, word_count, sorty)
+    if sorty == 'top' or 'new' or 'conterversial' or 'hot':
+        addtodb(redditor, word, word_count, sorty)
         return True
     else:
         return False
 
 
 def updatedbcaller(redditor, word, word_count, sorty):
-    if sorty == 'top':
-        updatedb(redditor, 'most_common_word_top', 'most_common_word_count_top', word, word_count, sorty)
-        return True
-    elif sorty == 'new':
-        updatedb(redditor, 'most_common_word_new', 'most_common_word_count_new', word, word_count, sorty)
-        return True
-    elif sorty == 'controversial':
-        updatedb(redditor, 'most_common_word_controversial', 'most_common_word_count_controversial', word, word_count, sorty)
-        return True
-    elif sorty == 'hot':
-        updatedb(redditor, 'most_common_word_hot', 'most_common_word_count_hot', word, word_count, sorty)
-        return True
+    if sorty == 'top' or 'new' or 'conterversial' or 'hot':
+        updatedb(redditor, word, word_count, sorty)
     else:
         return False
 
