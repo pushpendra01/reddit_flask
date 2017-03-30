@@ -53,11 +53,14 @@ def comments_all(redditor, sorty):
 def main_backend(redditor, sorty):
 
     record = record_finder(redditor)
-
-    time_since_update = datetime.utcnow() - record['last_updated']
+    try:
+        time_since_update = datetime.utcnow() - record['last_updated']
+    except Exception as ex:
+        print(type(ex))
+        pass
 
     if record is not None and time_since_update < timedelta(0, 86400):
-        if sorty in record['sorty']:
+        if sorty in record['sorted_by']:
             return fetcher(record, sorty)
         else:
             comment_contructor = comments_all(redditor=redditor, sorty=sorty)
@@ -85,9 +88,10 @@ def main_backend(redditor, sorty):
             word = max(word_dict, key=word_dict.get)
             word_count = word_dict[word]
 
-            if addtodb(redditor, word, word_count, sorty):
+            if addtodb(redditor, word, word_count, comment_count, sorty):
                 print('added', redditor)
             else:
                 print('error adding to databaes')
+
 
             return word, word_count, comment_count

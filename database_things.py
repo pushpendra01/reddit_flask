@@ -25,13 +25,14 @@ def updatedb(redditor, word, count, sorty):
         return ex
 
 
-def addtodb(redditor, word, count, sorty):
+def addtodb(redditor, word, word_count, comment_count, sorty):
     collection = database['word_analysis']
     try:
         post = {'redditor': redditor,
-                'common_word_' + sorty: word + '_' + sorty,
-                'common_word_count' + sorty: count + '_' + sorty,
-                'sorty': [sorty],
+                'common_word_' + sorty: word,
+                'common_word_count' + sorty: word_count,
+                'total_comments' + sorty: comment_count,
+                'sorted_by': [sorty],
                 'last_updated': datetime.utcnow(),
                 'updated_times': 1
                 }
