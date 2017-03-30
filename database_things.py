@@ -13,8 +13,8 @@ def updatedb(redditor, word, count, sorty):
             {
                 "$set":
                 {
-                    'most_common_word_' + sorty: word + '_' + sorty,
-                    'most_common_word_count_' + sorty: count + '_' + sorty,
+                    'common_word_' + sorty: word + '_' + sorty,
+                    'common_word_count_' + sorty: count + '_' + sorty,
                     "last_updated": datetime.utcnow()
                 }
             }
@@ -29,10 +29,11 @@ def addtodb(redditor, word, count, sorty):
     collection = database['word_analysis']
     try:
         post = {'redditor': redditor,
-                'most_common_word_' + sorty: word + '_' + sorty,
-                'most_common_word_count' + sorty: count + '_' + sorty,
+                'common_word_' + sorty: word + '_' + sorty,
+                'common_word_count' + sorty: count + '_' + sorty,
                 'sorty': [sorty],
-                "last_updated": datetime.utcnow()
+                'last_updated': datetime.utcnow(),
+                'updated_times': 1
                 }
 
         _ = collection.insert_one(post).inserted_id
@@ -41,7 +42,7 @@ def addtodb(redditor, word, count, sorty):
         return False
 
 
-def finder(redditor):
+def record_finder(redditor):
 
     collection = database['word_analysis']
     return collection.find_one({'redditor': redditor})
@@ -50,6 +51,6 @@ def finder(redditor):
 def fetcher(record, sorty):
 
     if sorty == 'top' or 'new' or 'conterversial' or 'hot':
-        return record['most_common_word_' + sorty], record['most_common_word_count_' + sorty], record['comment_count_' + sorty]
+        return record['common_word_' + sorty], record['common_word_count_' + sorty], record['comment_count_' + sorty]
     else:
         return False

@@ -9,10 +9,10 @@ import main_backend
 
 # @app.route('/<redditor>')
 # def count(redditor):
-#     most_common_word, number, total_comments = redditstuff.word(redditor)
+#     common_word, number, total_comments = redditstuff.word(redditor)
 #
 #     return render_template('basic.html',
-#                            most_common_word=most_common_word,
+#                            common_word=common_word,
 #                            number=number,
 #                            total_comments=total_comments,
 #                            redditor=redditor)
@@ -26,10 +26,10 @@ def calculate():
     elif request.method == 'POST':
         redditor = request.form['redditor']
         sorty = request.form['sorting']
-        most_common_word, number, comment_count = main_backend.main_backend(redditor=redditor, sorty=sorty)
+        common_word, number, comment_count = main_backend.main_backend(redditor=redditor, sorty=sorty)
 
         return render_template('basic.html',
-                               most_common_word=most_common_word.title(),
+                               common_word=common_word.title(),
                                number=number,
                                total_comments=comment_count,
                                redditor=redditor)

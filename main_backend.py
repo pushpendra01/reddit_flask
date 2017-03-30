@@ -2,7 +2,7 @@ import usernamevalidator
 import comment_processing
 import praw
 from datetime import datetime, timedelta
-from database_things import addtodb, updatedb, finder, fetcher
+from database_things import addtodb, updatedb, record_finder, fetcher
 
 
 reddit = praw.Reddit(client_id='JLn24zAHmQ3iPg',
@@ -52,11 +52,11 @@ def comments_all(redditor, sorty):
 
 def main_backend(redditor, sorty):
 
-    record = finder(redditor)
+    record = record_finder(redditor)
 
-    timesinceupdate = datetime.utcnow() - record['last_updated']
+    time_since_update = datetime.utcnow() - record['last_updated']
 
-    if record is not None and timesinceupdate < timedelta(0, 86400):
+    if record is not None and time_since_update < timedelta(0, 86400):
         if sorty in record['sorty']:
             return fetcher(record, sorty)
         else:
@@ -73,7 +73,7 @@ def main_backend(redditor, sorty):
 
             return word, word_count, comment_count
 
-    elif record is not None and timesinceupdate > timedelta(0, 7200):
+    elif record is not None and time_since_update > timedelta(0, 7200):
         record = data_refetch(redditor, sorty)
         # to be continued
 
@@ -85,7 +85,7 @@ def main_backend(redditor, sorty):
             word = max(word_dict, key=word_dict.get)
             word_count = word_dict[word]
 
-            if addtodbcaller(redditor, word, word_count, sorty):
+            if addtodb(redditor, word, word_count, sorty):
                 print('added', redditor)
             else:
                 print('error adding to databaes')

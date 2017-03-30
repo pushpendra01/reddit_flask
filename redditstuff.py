@@ -53,8 +53,8 @@ def word(redditor, asker, sorty='top'):
         comments = comment_sorting(redditor, sorty)
 
 
-        most_common_word = max(word_dict, key=word_dict.get)
-        most_common_word_num = word_dict[most_common_word]
+        common_word = max(word_dict, key=word_dict.get)
+        common_word_num = word_dict[common_word]
 
 
 
