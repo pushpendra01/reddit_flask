@@ -15,24 +15,14 @@ print('Read only:', reddit.read_only)  # Check if read_only
 print('Ok')
 
 
-def data_refetch(redditor, sorty):
-    pass
+def data_fetch(redditor, sorty):
+    comment_contructor = comments_all(redditor=redditor, sorty=sorty)
+    word_dict, comment_count = comment_processing.word_finder(comment_contructor)
 
+    word = max(word_dict, key=word_dict.get)
+    word_count = word_dict[word]
 
-def addtodbcaller(redditor, word, word_count, sorty):
-
-    if sorty == 'top' or 'new' or 'conterversial' or 'hot':
-        addtodb(redditor, word, word_count, sorty)
-        return True
-    else:
-        return False
-
-
-def updatedbcaller(redditor, word, word_count, sorty):
-    if sorty == 'top' or 'new' or 'conterversial' or 'hot':
-        updatedb(redditor, word, word_count, sorty)
-    else:
-        return False
+    return word, word_count, comment_count
 
 
 def comments_all(redditor, sorty):
@@ -45,6 +35,7 @@ def comments_all(redditor, sorty):
     elif sorty == 'hot':
         comments = reddit.redditor(redditor).comments.hot(limit=None)
     else:
+        print(sorty)
         raise Exception('Unknown Sorting')
 
     return comments
@@ -52,6 +43,8 @@ def comments_all(redditor, sorty):
 
 def main_backend(redditor, sorty):
 
+
+    time_since_update = 0
     record = record_finder(redditor)
     try:
         time_since_update = datetime.utcnow() - record['last_updated']
@@ -59,39 +52,43 @@ def main_backend(redditor, sorty):
         print(type(ex))
         pass
 
-    if record is not None and time_since_update < timedelta(0, 86400):
-        if sorty in record['sorted_by']:
-            return fetcher(record, sorty)
-        else:
-            comment_contructor = comments_all(redditor=redditor, sorty=sorty)
-            word_dict, comment_count = comment_processing.word_finder(comment_contructor)
-
-            word = max(word_dict, key=word_dict.get)
-            word_count = word_dict[word]
-
-            if updatedbcaller(redditor, word, word_count, sorty):
-                print('added', redditor)
+    # if redditor is already in database
+    if record is not None:
+        # and it is less than 2hrs
+        if time_since_update < timedelta(0, 86400):
+            # data already there
+            if sorty in record['sorted_by']:
+                return fetcher(record, sorty)
             else:
-                print('error adding to databaes')
+                word, word_count, comment_count = data_fetch(redditor, sorty)
+                try:
+                    updatedb(redditor, word, word_count, sorty)
+                except Exception as ex:
+                    print(type(ex))
 
-            return word, word_count, comment_count
+        elif time_since_update > timedelta(0, 7200):
+            if sorty in record['sorted_by']:
+                word, word_count, comment_count = data_fetch(redditor, sorty)
 
-    elif record is not None and time_since_update > timedelta(0, 7200):
-        record = data_refetch(redditor, sorty)
-        # to be continued
+
+                # update old record
+            elif sorty not in record['sorted_by']:
+                word, word_count, comment_count = data_fetch(redditor, sorty)
+                try:
+                    updatedb(redditor, word, word_count, sorty)
+                except Exception as ex:
+                    print(type(ex))
 
     elif record is None:
         if usernamevalidator.username_validation(reddit=reddit, username=redditor):
-            comment_contructor = comments_all(redditor=redditor, sorty=sorty)
-            word_dict, comment_count = comment_processing.word_finder(comment_contructor)
+            word, word_count, comment_count = data_fetch(redditor, sorty)
 
-            word = max(word_dict, key=word_dict.get)
-            word_count = word_dict[word]
+
 
             if addtodb(redditor, word, word_count, comment_count, sorty):
-                print('added', redditor)
+                print('added', 'new', redditor, 'to database')
             else:
-                print('error adding to databaes')
+                print('error adding to databaes new redditor ')
 
 
             return word, word_count, comment_count
