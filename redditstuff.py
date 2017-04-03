@@ -1,15 +1,12 @@
 from datetime import datetime, timedelta
+
 import praw
 import pymongo
+
 
 client = pymongo.MongoClient()
 database = client.reddit
 collection = database['word_analysis']
-
-
-
-
-
 
 # reddit = praw.Reddit('XDD')
 # Create authenticated reddit instance
@@ -24,37 +21,33 @@ print('Ok')
 
 
 def comment_sorting(redditor, sorty):
-    if sorty == 'top':
-        comments = reddit.redditor(redditor).comments.top(limit=None)
-    elif sorty == 'new':
-        comments = reddit.redditor(redditor).comments.new(limit=None)
-    elif sorty == 'controversial':
-        comments = reddit.redditor(redditor).comments.controversial(limit=None)
-    elif sorty == 'hot':
-        comments = reddit.redditor(redditor).comments.hot(limit=None)
-    else:
-        raise Exception('Unknown Sorting')
+	if sorty == 'top':
+		comments = reddit.redditor(redditor).comments.top(limit=None)
+	elif sorty == 'new':
+		comments = reddit.redditor(redditor).comments.new(limit=None)
+	elif sorty == 'controversial':
+		comments = reddit.redditor(redditor).comments.controversial(limit=None)
+	elif sorty == 'hot':
+		comments = reddit.redditor(redditor).comments.hot(limit=None)
+	else:
+		raise Exception('Unknown Sorting')
 
-    return comments
+	return comments
 
 
 def word(redditor, asker, sorty='top'):
-    count = 0
-    word_dict = {}
+	count = 0
+	word_dict = {}
 
-    record = collection.find_one({'redditor': redditor})
-    if record is None:
-        print('Not found')
-    else:
-        print(record['redditor'])
+	record = collection.find_one({'redditor': redditor})
+	if record is None:
+		print('Not found')
+	else:
+		print(record['redditor'])
 
-    if datetime.utcnow() - record['last_updated'] > timedelta(0, 7200) or record is None:
-        # Modify to first look in valid_usernames and then reddit
-        comments = comment_sorting(redditor, sorty)
+	if datetime.utcnow() - record['last_updated'] > timedelta(0, 7200) or record is None:
+		# Modify to first look in valid_usernames and then reddit
+		comments = comment_sorting(redditor, sorty)
 
-
-        common_word = max(word_dict, key=word_dict.get)
-        common_word_num = word_dict[common_word]
-
-
-
+		common_word = max(word_dict, key=word_dict.get)
+		common_word_num = word_dict[common_word]
