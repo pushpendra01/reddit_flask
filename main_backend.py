@@ -50,11 +50,11 @@ def main_backend(redditor, sorty):
 	time_since_update = 0
 	record = database_things.record_finder(redditor)
 	try:
-		time_since_update = datetime.utcnow() - record['last_updated' + sorty]
+		time_since_update = datetime.utcnow() - record['last_updated_' + sorty]
 		print(time_since_update)
 		print('ok')
-	except Exception as ex:
-		print(type(ex))
+	except TypeError as ex:
+		print('new user')
 		pass
 
 	# if redditor is already in database
@@ -70,7 +70,7 @@ def main_backend(redditor, sorty):
 				try:
 					database_things.updatedb(redditor, word, word_count, comment_count, sorty)
 				except Exception as ex:
-					print(type(ex))
+					print(ex)
 				finally:
 					return word, word_count, comment_count
 
@@ -80,7 +80,7 @@ def main_backend(redditor, sorty):
 			try:
 				database_things.updatedb(redditor, word, word_count, comment_count, sorty)
 			except Exception as ex:
-				print(type(ex))
+				print(ex)
 
 
 	elif record is None:
@@ -91,7 +91,7 @@ def main_backend(redditor, sorty):
 				database_things.addtodb(redditor, word, word_count, comment_count, sorty)
 				print('added', 'new', redditor, 'to database')
 			except Exception as ex:
-				print(type(ex))
+				print(ex)
 				print('error adding to databaes new redditor ')
 			finally:
 				return word, word_count, comment_count
