@@ -10,27 +10,33 @@
 
 </div>
 <form method="post">
-    <div>
-        Please specify the user you want to query about:
-        <input type="text" name="redditor">
-    </div>
-    <div>
-        Sort comments by
-        <br>
-        <input type="radio" name="sorting" value="top" checked=checked> Top
-        <br>
-        <input type="radio" name="sorting" value="hot"> Hot
-        <br>
-        <input type="radio" name="sorting" value="new"> New
-        <br>
-        <input type="radio" name="sorting" value="controversial"> Controversial
-        <br>
-    </div>
-
-    <div>
-        <button type="submit">Submit</button>
-    </div>
-
+    <fieldset style="width:500px;">
+        <legend>My Form</legend>
+    <table>
+        <tr>
+            <td>Please specify the user you want to query about:</td>
+            <td><input type="text" name="redditor"></td>
+        </tr>
+       <tr>
+           <td>Sort comments by</td>
+       </tr>
+        <tr>
+            <td><input type="radio" name="sorting" value="top" checked=checked> Top</td>
+        </tr>
+        <tr>
+            <td><input type="radio" name="sorting" value="hot"> Hot</td>
+        </tr>
+        <tr>
+            <td><input type="radio" name="sorting" value="new"> New</td>
+        </tr>
+        <tr>
+            <td><input type="radio" name="sorting" value="controversial"> Controversial</td>
+        </tr>
+        <tr>
+            <td><button type="submit">Submit</button></td>
+        </tr>
+    </table>
+    </fieldset>
 </form>
 </body>
 </html>
