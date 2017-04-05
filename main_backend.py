@@ -9,6 +9,8 @@ import database_things
 import usernamevalidator
 
 
+timediff = 600
+
 reddit = praw.Reddit(client_id='JLn24zAHmQ3iPg',
                      client_secret='KnsAYz4tTBdSpX7LMB1KbjG998M',
                      user_agent='windows:com.top word finder.XD:v0.2 by /u/waitingforcracks',
@@ -55,10 +57,10 @@ def main_backend(redditor, sorty):
         if sorty in record['sorted_by']:
             time_since_update = datetime.utcnow() - record['last_updated_' + sorty]
 
-            if time_since_update <= timedelta(0, 600):
+            if time_since_update <= timedelta(0, timediff):
                 return database_things.data_fetcher(record, sorty)
 
-            elif time_since_update > timedelta(0, 600):
+            elif time_since_update > timedelta(0, timediff):
 
                 word, word_count, comment_count = data_fetch(redditor, sorty)
                 try:

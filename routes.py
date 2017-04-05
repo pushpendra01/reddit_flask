@@ -28,6 +28,7 @@ def calculate():
     elif request.method == 'POST':
         redditor = request.form['redditor']
         sorty = request.form['sorting']
+
         common_word, number, comment_count = main_backend.main_backend(redditor, sorty)
 
         return render_template('basic.html',
