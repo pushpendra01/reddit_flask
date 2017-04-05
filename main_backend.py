@@ -10,10 +10,10 @@ import usernamevalidator
 
 
 reddit = praw.Reddit(client_id='JLn24zAHmQ3iPg',
-					 client_secret='KnsAYz4tTBdSpX7LMB1KbjG998M',
-					 user_agent='windows:com.top word finder.XD:v0.2 by /u/waitingforcracks',
-					 username='waitingforcracks',
-					 password='1011sailboat')
+                     client_secret='KnsAYz4tTBdSpX7LMB1KbjG998M',
+                     user_agent='windows:com.top word finder.XD:v0.2 by /u/waitingforcracks',
+                     username='waitingforcracks',
+                     password='1011sailboat')
 
 print('Read only:', reddit.read_only)  # Check if read_only
 print('Ok')
@@ -47,40 +47,35 @@ def comments_all(redditor, sorty):
 
 def main_backend(redditor, sorty):
 	print('hmm')
-	time_since_update = 0
 	record = database_things.record_finder(redditor)
-	try:
-		time_since_update = datetime.utcnow() - record['last_updated_' + sorty]
-		print(time_since_update)
-		print('ok')
-	except TypeError as ex:
-		print('new user')
-		pass
 
 	# if redditor is already in database
 	if record is not None:
-		# and it is less than 2hrs
+		if sorty in record['sorted_by']:
+			time_since_update = datetime.utcnow() - record['last_updated_' + sorty]
 
-		if time_since_update < timedelta(0, 86400):
-			# and this particular sorting is in the database
-			if sorty in record['sorted_by']:
+
+			if time_since_update <= timedelta(0, 86400):
 				return database_things.data_fetcher(record, sorty)
-			elif sorty not in record['sorted_by']:
+
+			elif time_since_update > timedelta(0, 86400):
+
 				word, word_count, comment_count = data_fetch(redditor, sorty)
 				try:
 					database_things.updatedb(redditor, word, word_count, comment_count, sorty)
 				except Exception as ex:
 					print(ex)
-				finally:
-					return word, word_count, comment_count
 
-		elif time_since_update >= timedelta(0, 86400):
 
+
+		elif sorty not in record['sorted_by']:
 			word, word_count, comment_count = data_fetch(redditor, sorty)
 			try:
 				database_things.updatedb(redditor, word, word_count, comment_count, sorty)
 			except Exception as ex:
 				print(ex)
+			finally:
+				return word, word_count, comment_count
 
 
 	elif record is None:
