@@ -45,13 +45,13 @@ def updatedb(redditor, word, word_count, comment_count, sorty):
                             'common_word_' + sorty: word,
                             'common_word_count_' + sorty: word_count,
                             'last_updated_' + sorty: datetime.utcnow(),
-                            'total_comments' + sorty: comment_count
+                            'total_comments_' + sorty: comment_count
                         },
                     "$inc":
                         {
                             'updated_times_' + sorty: 1
                         },
-                    "$addToSet:":
+                    "$addToSet":
                         {
                             'sorted_by': sorty
                         }
@@ -64,7 +64,7 @@ def updatedb(redditor, word, word_count, comment_count, sorty):
 
 def addtodb(redditor, word, word_count, comment_count, sorty):
     collection = database['word_analysis']
-    if sorty == 'top' or 'new' or 'conterversial' or 'hot':
+    if sorty == 'top' or 'new' or 'controversialversial' or 'hot':
         try:
             post = {
                 'redditor': redditor,
@@ -92,7 +92,7 @@ def record_finder(redditor):
 
 
 def data_fetcher(record, sorty):
-    if sorty == 'top' or 'new' or 'conterversial' or 'hot':
+    if sorty == 'top' or 'new' or 'controversialversial' or 'hot':
 
         word = record['common_word_' + sorty]
         word_count = record['common_word_count_' + sorty]
