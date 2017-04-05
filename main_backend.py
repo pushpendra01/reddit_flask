@@ -8,6 +8,7 @@ import comment_processing
 import database_things
 import usernamevalidator
 
+
 reddit = praw.Reddit(client_id='JLn24zAHmQ3iPg',
                      client_secret='KnsAYz4tTBdSpX7LMB1KbjG998M',
                      user_agent='windows:com.top word finder.XD:v0.2 by /u/waitingforcracks',
