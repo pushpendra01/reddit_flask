@@ -34,9 +34,7 @@ def updatedb(redditor, word, word_count, comment_count, sorty):
 			return True
 		except Exception as ex:
 			print(ex)
-			print('error in updatedb whd-'
-			      ''
-			      'en sorty in sorty')
+			print('error in updatedb when sorty in uspposed to be in sorty')
 	elif sorty not in record['sorted_by']:
 		try:
 			collection.update_one(
